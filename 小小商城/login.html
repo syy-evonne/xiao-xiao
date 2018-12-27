@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+		<title>用户登录</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/login.css"/>
+		<style type="text/css">
+			.icon {
+				background: url(../img/icon.png) no-repeat;
+				/*2倍背景图  兼容苹果手机的的浏览器*/
+				/*背景图的原始宽度为750px  使用的时候缩小一倍*/
+				-webkit-background-size: 375px auto;
+				background-size: 375px auto;
+			}
+			header{
+				max-width: 750px;
+				min-width: 320px;
+				margin:0 auto;
+				height: 60px;
+				background-color: #39435B;
+				padding: 15px 0px;
+				position: fixed;
+				width: 100%;
+				left: 0;
+				right: 0;
+				margin: auto;
+			}
+			header .logo{
+				
+			}
+			main input {
+	display: block;
+	width: 100%;
+	height: 50px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 10px;
+	background: #FFFFFF;
+	padding: 5px 20px;
+	font-size: 130%;
+	color: black;
+}
+
+main #button {
+	width: 100%;
+	border-radius: 5px;
+	border: 0;
+	background: #39435A;
+	color: white;
+	font-size: 130%;
+	position: fixed;
+	bottom: 0;
+	line-height: 50px;
+	max-width: 750px;
+	min-width: 32px;
+}
+
+#Reg-login {
+	padding: 10px;
+	text-align: center;
+	border-top: 1px dashed #39435A;
+}
+
+main #regButton {
+	width: 100%;
+	background: #1F6CA1;
+	color: #E1E5EE;
+	margin-bottom: 10px;
+	border-radius: 5px;
+	border: 0;
+	line-height: 50px;
+	height: 50px;
+	max-width: 750px;
+	min-width: 32px;
+}
+
+.disable {
+	background: #B4B9C3!important;
+}
+
+#tip {
+	padding: 10px;
+	color: red;
+}
+
+#v_container {
+	width: 100%;
+	height: 80px;
+}
+		</style>
+	</head>
+	<body>
+		<!--logo要写问题：文字还要隐藏：站内优化，方便网页被搜索引擎搜索-->
+		<header class="clearfix">
+			<div class="icon logo">
+				
+			</div>
+		</header>
+		<main>
+		<form action="">
+		<input type="text" id="userName" placeholder="请输入用户名"/>
+		<input type="password" id="userPass" placeholder="请输入密码"/>
+		<input type="tel"id="code_input"placeholder="请输入下方图片验证码"/>
+		</form>
+		<div id="v_container"></div>
+		<div id="tip"></div>
+		<div id="Reg-login">
+			<a href="reg.html">没有账户，点击注册</a>
+		</div>
+		<button id="button">点击登录</button>
+	</main>
+		
+		
+	<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/identifying.js"></script>
+<script type="text/javascript">
+	$(function(){
+		//调用插件  绑定标签生成验证码
+		var yzm = new identifying("v_container");
+		//点击按钮
+		$("#button").click(function(){
+		//调用插件方法判断输入的验证码是否正确true  false
+		var isCode = yzm.validate($("#code_input").val());
+		//根据验证码输入情况判断逻辑
+		if(isCode){
+			//验证成功---收集数据发送ajax请求
+			var username=$("#username").val();
+			var password=$("#password").val();
+			//输入验证信息
+			if(username!=""&&password!=""){
+ 				//获取xmlhttpreequest获取请求对象
+ 				var request = new XMLHttpRequest();
+ 				//使用请求对象  配置请求信息
+ 				var data = "username="+username+"&"+"password="+password;
+ 				//发送数据（开启请求）
+ 				request.open("GET","http://127.0.0.1:8080/?"+data)
+ 				request.send();
+ 				//接受响应，处理相应数据----适用对象的onreadystatechange事件，当request.readyState变为4，
+ 				request.onreadystatechange=function(){
+ 					if(request.readyState == 4){
+ 						console.log(request.responseText);//相应结果
+ 					}else{
+ 						console.log("请求未完成："+request.responseText);
+ 					}
+ 				}
+			}else{
+				$("#tip").html("用户名和密码不能为空")	
+			}
+		}else{
+			$("#tip").html("验证码错误")
+		}
+		})
+		
+	})
+</script>
+</body>
+
+</html>
